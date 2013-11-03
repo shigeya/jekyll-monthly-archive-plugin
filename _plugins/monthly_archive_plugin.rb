@@ -39,23 +39,32 @@ module Jekyll
 
   # Actual page instances
   class MonthlyArchivePage < Page
+
+    ATTRIBUTES_FOR_LIQUID = %w[
+      year,
+      month,
+      date,
+      content
+    ]
+
     def initialize(site, dir, year, month, posts)
       @site = site
       @dir = dir
       @year = year
       @month = month
       @archive_dir_name = '%04d/%02d' % [year, month]
+      @date = Date.new(@year, @month)
+      @layout =  site.config['monthly_archive'] && site.config['monthly_archive']['layout'] || 'monthly_archive'
       self.ext = '.html'
       self.basename = 'index'
       self.content = <<-EOS
-<ul class="monthly-archive-list">
-{% for post in page.posts %}<li><a href="{{ post.url }}"><span>{{ post.title }}<span></a></li>{% endfor %}
-</ul>
+{% for post in page.posts %}<li><a href="{{ post.url }}"><span>{{ post.title }}<span></a></li>
+{% endfor %}
       EOS
       self.data = {
-          'layout' => 'default',
+          'layout' => @layout,
           'type' => 'archive',
-          'title' => "Archive for #{@year}/#{@month}",
+          'title' => "Monthly archive for #{@year}/#{@month}",
           'posts' => posts
       }
     end
@@ -70,7 +79,10 @@ module Jekyll
 
     def to_liquid(attr = nil)
       self.data.deep_merge({
-                               'content' => self.content
+                               'content' => self.content,
+                               'date' => @date,
+                               'month' => @month,
+                               'year' => @year
                            })
     end
 

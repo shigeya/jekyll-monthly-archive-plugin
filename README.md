@@ -9,20 +9,32 @@ This code is based on following hacks:
 - https://gist.github.com/nlindley/6409459
 
 
-# Configuration
+# Installation
 
 To use this plugin,
 
-- Place the file `monthly_archive_plugin.rb` into `_plugins`
+- Place `_plugins/monthly_archive_plugin.rb` into `_plugins`
 directory of Jekyll site working directory.
 
-- If necessary, configure archive generaton directory prefix in 
-site configuration file, as a hash key `path` under hash `monthly_archive`.
-In this example, the archive file will be stored in `/blog/archives/YYYY/MM/index.html`
-  
-    monthly_archive:
-      path: /blog/archives
+- Copy `_layouts/monthly_archive.html` into `_layouts` directory of
+Jekyll site working directory, then edit it appropriately.
 
+# Parameter configuration
+
+Archive layout can be specified by `layout` key in the `monthly_archive`
+site configuration. Default is `monthly_archive`.
+
+Archive generation directory prefix can be specified by `path` key in the `monthly_archive`
+site configuration. If specified, archive will be generated in
+`PATH/YYYY/MM/index.html`, where `PATH` is substituted by `path`, `YYYY` and `MM` are
+year and month. Default is null string.
+
+
+# Liquid variables for template
+
+`page.year`, `page.month` contains the year and month of the archive page.
+
+`page.date` also contains date (`page.year/page.month/1`)
 
 # Copyright
 
