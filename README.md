@@ -1,5 +1,6 @@
-Monthly archive plugin for Jekyll
+# Monthly archive plugin for Jekyll
 
+Generate a monthly archive much like MovableType does.
 
 This code is based on following hacks:
 
@@ -8,10 +9,22 @@ This code is based on following hacks:
 - https://gist.github.com/nlindley/6409459
 
 
-To use this plugin, drop the file `monthly_archive_plugin.rb` into `_plugins`
+# Configuration
+
+To use this plugin,
+
+- Place the file `monthly_archive_plugin.rb` into `_plugins`
 directory of Jekyll site working directory.
 
+- If necessary, configure archive generaton directory prefix in 
+site configuration file, as a hash key `path` under hash `monthly_archive`.
+In this example, the archive file will be stored in `/blog/archives/YYYY/MM/index.html`
+  
+    monthly_archive:
+      path: /blog/archives
 
+
+# Copyright
 
 The MIT License (MIT)
 

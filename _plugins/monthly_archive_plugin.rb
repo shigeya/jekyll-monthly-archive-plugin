@@ -11,16 +11,19 @@
 #   https://gist.github.com/nlindley/6409459
 #
 
+#
+# Archive will be written as #{archive_path}/#{year}/#{month}/index.html
+# archive_path can be configured in 'path' key in 'monthly_archive' of
+# site configuration file. 'path' is default null.
+#
+
 module Jekyll
 
   # Generator class invoked from Jekyll
   class MonthlyArchiveGenerator < Generator
-    MONTHLY_ARCHIVE_BASE = 'blog/archives'
-    MONTHLY_ARCHIVE_DIR = ''
-
     def generate(site)
       posts_group_by_year_and_month(site).each do |ym, list|
-        site.pages << MonthlyArchivePage.new(site, MONTHLY_ARCHIVE_BASE, MONTHLY_ARCHIVE_DIR,
+        site.pages << MonthlyArchivePage.new(site, archive_base(site),
                                              ym[0], ym[1], list)
       end
     end
@@ -28,13 +31,16 @@ module Jekyll
     def posts_group_by_year_and_month(site)
       site.posts.each.group_by { |post| [post.date.year, post.date.month] }
     end
+
+    def archive_base(site)
+      site.config['monthly_archive'] && site.config['monthly_archive']['path'] || ''
+    end
   end
 
   # Actual page instances
   class MonthlyArchivePage < Page
-    def initialize(site, base, dir, year, month, posts)
+    def initialize(site, dir, year, month, posts)
       @site = site
-      @base = base
       @dir = dir
       @year = year
       @month = month
@@ -64,13 +70,12 @@ module Jekyll
 
     def to_liquid(attr = nil)
       self.data.deep_merge({
-                               'url' => self.url,
                                'content' => self.content
                            })
     end
 
-    def url
-      File.join('/', @base, @dir, @archive_dir_name, 'index.html')
+    def destination(dest)
+      File.join('/', dest, @dir, @archive_dir_name, 'index.html')
     end
 
   end
