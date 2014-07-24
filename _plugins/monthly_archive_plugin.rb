@@ -65,7 +65,10 @@ module Jekyll
           'layout' => @layout,
           'type' => 'archive',
           'title' => "Monthly archive for #{@year}/#{@month}",
-          'posts' => posts
+          'posts' => posts,
+          'url' => File.join('/',
+                     site.config['monthly_archive']['path'],
+                     @archive_dir_name, 'index.html')
       }
     end
 
