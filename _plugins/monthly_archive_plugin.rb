@@ -19,11 +19,17 @@
 
 module Jekyll
 
+  module MonthlyArchiveUtil
+    def self.archive_base(site)
+      site.config['monthly_archive'] && site.config['monthly_archive']['path'] || ''
+    end
+  end
+
   # Generator class invoked from Jekyll
   class MonthlyArchiveGenerator < Generator
     def generate(site)
       posts_group_by_year_and_month(site).each do |ym, list|
-        site.pages << MonthlyArchivePage.new(site, archive_base(site),
+        site.pages << MonthlyArchivePage.new(site, MonthlyArchiveUtil.archive_base(site),
                                              ym[0], ym[1], list)
       end
     end
@@ -32,9 +38,6 @@ module Jekyll
       site.posts.each.group_by { |post| [post.date.year, post.date.month] }
     end
 
-    def archive_base(site)
-      site.config['monthly_archive'] && site.config['monthly_archive']['path'] || ''
-    end
   end
 
   # Actual page instances
@@ -67,7 +70,7 @@ module Jekyll
           'title' => "Monthly archive for #{@year}/#{@month}",
           'posts' => posts,
           'url' => File.join('/',
-                     site.config['monthly_archive']['path'],
+                     MonthlyArchiveUtil.archive_base(site),
                      @archive_dir_name, 'index.html')
       }
     end
